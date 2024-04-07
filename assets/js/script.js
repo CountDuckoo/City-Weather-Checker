@@ -5,6 +5,7 @@ $( function(){
     const searchHistoryEl = $('#search-history');
     const mainWeatherResultsEl = $('#main-weather');
     const dailyWeatherResultsEl = $('#5-days-weather');
+    const weatherHeaderEl = $('#weather-header');
 
     let searchHistory = [];
     const savedSearchHistory = localStorage.getItem("searchHistory");
@@ -14,6 +15,8 @@ $( function(){
     }
     if(localStorage.getItem("weatherResults")){
         formatWeather();
+    } else {
+        weatherHeaderEl.attr("style", "display: none;");
     }
      
 
@@ -23,10 +26,10 @@ $( function(){
         event.preventDefault();
         const city = cityField.val().trim();
         if (!city){
-            // display error message
+            window.alert("Enter a city first!");
             return;
         }
-        const geocodeURL = `http://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIKey}`;
+        const geocodeURL = `https://api.openweathermap.org/geo/1.0/direct?q=${city}&limit=1&appid=${APIKey}`;
         citySearch(geocodeURL, city);
     });
 
@@ -58,12 +61,12 @@ $( function(){
         })
         .catch(function(e){
             console.error(`${e.name}: ${e.message}`);
-            // display error to user
+            window.alert(`An error occurred when searching for the city, ${e.name}: ${e.message}. Please try again.`);
         });
     }
 
     function weatherSearch(lat, lon, city){
-        const weatherURL = `http://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=imperial`;
+        const weatherURL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&appid=${APIKey}&units=imperial`;
         fetch(weatherURL)
         .then(function(response){
             if(response.ok){
@@ -78,17 +81,15 @@ $( function(){
         })
         .catch(function(e){
             console.error(`${e.name}: ${e.message}`);
-            // display error to user
+            window.alert(`An error occurred when getting the weather data, ${e.name}: ${e.message}. Please try again.`);
         });
     }
 
     function formatWeather(){
+        weatherHeaderEl.attr("style", "display: block;");
         const weatherObject = JSON.parse(localStorage.getItem("weatherResults"));
-        console.log(weatherObject);
         const city = weatherObject.city.name;
         const weatherResults = weatherObject.list;
-        console.log(weatherResults);
-        console.log(city);
 
         mainWeatherResultsEl.empty();
         const todayWeather = weatherResults[0];
