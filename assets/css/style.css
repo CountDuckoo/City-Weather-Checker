@@ -1,0 +1,15 @@
+#search-history {
+    padding-left: 0;
+}
+
+li.search-history-button {
+    display: block;
+    margin-top: 10px;
+}
+
+header{
+    background-image: linear-gradient(to right, blue , darkblue);
+    color: white;
+    text-align:center;
+    text-indent: 30%;
+}
